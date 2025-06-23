@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/theme/theme-toggle";
+
 import { Menu, X } from "lucide-react";
+import { ModeToggle } from "@/components/theme/theme-toggle";
 
 const Navbar = () => {
   const pathname = usePathname();
