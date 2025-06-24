@@ -2,49 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
 import { Menu, X } from "lucide-react";
 import { ModeToggle } from "@/components/theme/theme-toggle";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeHash, setActiveHash] = useState("");
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/#skills", label: "Skills" },
-    { href: "/#projects", label: "Projects" },
-    { href: "/#contact", label: "Contact" },
-    // { href: "/about", label: "About" },
+    { href: "/skills", label: "Skills" },
+    { href: "/projects", label: "Projects" },
+    { href: "/contact", label: "Contact" },
     { href: "/blogs", label: "Blogs" }
   ];
 
-  useEffect(() => {
-    // Set initial hash on client side
-    setActiveHash(window.location.hash);
-
-    const handleHashChange = () => {
-      setActiveHash(window.location.hash);
-      // Scroll to the section if the hash is updated
-      const element = document.getElementById(window.location.hash.slice(1));
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    if (href.startsWith("/#")) {
-      return pathname === "/" && `#${href.split('#')[1]}` === activeHash;
-    }
-    return pathname.startsWith(href);
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   return (
@@ -72,10 +48,20 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Right: Theme toggle + Login + Mobile menu button */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+          {/* Desktop Login button */}
+          <Link href="/login" className="hidden md:block">
+            <Button className="cursor-pointer hover:bg-white hover:text-black" size="lg">Login</Button>
+          </Link>
+          {/* Mobile Menu Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
         </div>
@@ -99,6 +85,9 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
+            <Link href="/login" onClick={() => setIsOpen(false)}>
+              <Button size="sm" className="cursor-pointer hover:bg-white hover:text-black w-full">Login</Button>
+            </Link>
           </nav>
         </div>
       )}
