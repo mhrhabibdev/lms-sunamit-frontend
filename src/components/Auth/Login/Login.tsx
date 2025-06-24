@@ -1,6 +1,8 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +25,8 @@ export function LoginFrom() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data: LoginFormInputs) => {
     console.log("Login Data:", data);
@@ -48,15 +52,24 @@ export function LoginFrom() {
               )}
             </div>
 
-            {/* Password */}
-            <div className="flex flex-col space-y-1.5">
+            {/* Password with eye icon */}
+            <div className="flex flex-col space-y-1.5 relative">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password", { required: "Password is required" })}
+                className="pr-10" // extra padding for icon space
               />
+              {/* Eye toggle button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-8 text-gray-500 dark:text-gray-400 hover:text-primary"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password.message}</p>
               )}
