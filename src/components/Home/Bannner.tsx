@@ -98,7 +98,7 @@ export default function Banner() {
                 </SwiperSlide>
               ))}
               <div className="swiper-pagination !bottom-0 !relative mt-4" />
-            </Swiper>
+            </Swiper>     
           </div>
 
           {/* Right One Column: Discount Text */}
