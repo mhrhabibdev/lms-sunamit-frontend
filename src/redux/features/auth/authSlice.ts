@@ -1,8 +1,22 @@
+// src/redux/features/auth/authSlice.ts
+
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  // Add other user properties as needed
+}
+
+interface AuthState {
+  token: string;
+  user: IUser | null; // Use IUser instead of any
+}
+
+const initialState: AuthState = {
   token: "",
-  user: "",
+  user: null,
 };
 
 const authSlice = createSlice({
@@ -11,7 +25,6 @@ const authSlice = createSlice({
   reducers: {
     userRegistration: (state, action) => {
       state.token = action.payload.token;
-    
     },
     userLogin: (state, action) => {
       state.token = action.payload.accessToken;
@@ -19,10 +32,10 @@ const authSlice = createSlice({
     },
     userLogout: (state) => {
       state.token = "";
-      state.user = "";
+      state.user = null;
+    },
+  },
+});
 
-  }
-}
-  });
-  
-  export const { userRegistration,userLogin,userLogout } = authSlice.actions;
+export const { userRegistration, userLogin, userLogout } = authSlice.actions;
+export default authSlice.reducer;
