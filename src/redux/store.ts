@@ -1,13 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-// import your reducers here
-// import userReducer from './slices/userSlice';
+import { apiSlice } from './features/api/apiSlice';
+// import other reducers...
 
 const store = configureStore({
-    reducer: {
-        // user: userReducer,
-        // add other reducers here
-    },
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    // user: userReducer,
+    // other reducers...
+  },
+  devTools: process.env.NODE_ENV !== 'production', 
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, 
+      immutableCheck: true, 
+    }).concat(apiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
