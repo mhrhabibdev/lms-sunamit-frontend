@@ -1,18 +1,19 @@
+// src/redux/store.ts
+
 import { configureStore } from '@reduxjs/toolkit';
 import { apiSlice } from './features/api/apiSlice';
-// import other reducers...
+import authReducer from './features/auth/authSlice'; // ✅ Import auth reducer
 
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
-    // user: userReducer,
-    // other reducers...
+    auth: authReducer, // ✅ Add auth reducer to the store
   },
-  devTools: process.env.NODE_ENV !== 'production', 
+  devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, 
-      immutableCheck: true, 
+      serializableCheck: false,
+      immutableCheck: true,
     }).concat(apiSlice.middleware),
 });
 
