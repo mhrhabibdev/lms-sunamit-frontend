@@ -1,15 +1,17 @@
 
-import Navbar from "@/components/modules/shared/Navber";
-import React from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import CommonLayout from "./CommonLayout";
 
-const CommonLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      <Navbar />
-      <main className="min-h-screen">{children}</main>
-      {/* <Footer /> */}
-    </div>
-  );
-};
+    <SidebarProvider>
+      <CommonLayout>
 
-export default CommonLayout;
+        <SidebarTrigger />
+ 
+        {children}
+
+      </CommonLayout>
+    </SidebarProvider>
+  );
+}
