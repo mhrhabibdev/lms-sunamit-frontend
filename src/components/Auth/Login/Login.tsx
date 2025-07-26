@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { SocialAuthButtons } from "@/components/shared/SocialAuthButtons";
 
 type LoginFormInputs = {
   email: string;
@@ -109,6 +110,10 @@ export function LoginFrom() {
               >
                 Forgot Password?
               </Link>
+            </div>
+            {/* Social Auth Buttons */}
+            <div className="flex flex-col gap-3">
+              <SocialAuthButtons />
             </div>
           </CardContent>
 

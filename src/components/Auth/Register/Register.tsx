@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useUserRegisterMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { SocialAuthButtons } from "@/components/shared/SocialAuthButtons";
 
 type RegisterFormInputs = {
   name: string;
@@ -124,6 +125,10 @@ export function RegisterForm() {
                 <p className="text-sm text-red-500">{errors.password.message}</p>
               )}
             </div>
+                {/* Social Auth Buttons */}
+                        <div className="flex flex-col gap-3">
+                          <SocialAuthButtons />
+                        </div>
           </CardContent>
 
           <CardFooter className="flex flex-col items-center gap-4 pt-4 pb-6">
@@ -139,6 +144,7 @@ export function RegisterForm() {
                 Login
               </Link>
             </p>
+
           </CardFooter>
         </form>
         <BorderBeam duration={8} size={100} />
