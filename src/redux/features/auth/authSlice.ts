@@ -1,17 +1,20 @@
 // src/redux/features/auth/authSlice.ts
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IUser {
+export interface IUser {
   id: string;
   name: string;
   email: string;
-  // Add other user properties as needed
+  avatar?: string;
+  role?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface AuthState {
   token: string;
-  user: IUser | null; // Use IUser instead of any
+  user: IUser | null;
 }
 
 const initialState: AuthState = {
@@ -23,19 +26,49 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    userRegistration: (state, action) => {
+    // ✅ After registration: store activation token only
+    userRegistration: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
     },
-    userLogin: (state, action) => {
-      state.token = action.payload.accessToken;
+
+    // ✅ After login (manual or social): store token and user
+    userLogin: (
+      state,
+      action: PayloadAction<{ token: string; user: IUser }>
+    ) => {
+      state.token = action.payload.token;
       state.user = action.payload.user;
     },
+    // ✅ After social login: store token and user
+    userSocialLogin: ( 
+      state,
+      action: PayloadAction<{ token: string; user: IUser }>
+    ) => {
+      state.token = action.payload.token;
+      state.user = action.payload.user;
+    },
+    
+    // ✅ Logout: clear all auth state
     userLogout: (state) => {
       state.token = "";
       state.user = null;
     },
+
+    // ✅ Update only user data (e.g. name, avatar) without token change
+    updateUserData: (state, action: PayloadAction<IUser>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
   },
 });
 
-export const { userRegistration, userLogin, userLogout } = authSlice.actions;
+export const {
+  userRegistration,
+  userLogin,
+  userLogout,
+  updateUserData,
+  userSocialLogin
+} = authSlice.actions;
+
 export default authSlice.reducer;
