@@ -2,14 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store";
+import { userLogout } from "@/redux/features/auth/authSlice";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { ModeToggle } from "@/components/theme/theme-toggle";
+import { Menu, X, User, LayoutDashboard, LogOut } from "lucide-react";
+import dynamic from "next/dynamic";
+import UserDropdown from "@/components/shared/UserDropdown";
+
+const ModeToggle = dynamic(() =>
+  import('../../theme/theme-toggle').then((mod) => mod.ModeToggle),
+  { ssr: false }
+);
 
 const Navbar = () => {
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -17,7 +34,7 @@ const Navbar = () => {
     { href: "/about", label: "About" },
     { href: "/policy", label: "Policy" },
     { href: "/faq", label: "FAQ" },
-    { href: "/blogs", label: "Blogs" }
+    { href: "/blogs", label: "Blogs" },
   ];
 
   const isActive = (href: string) => {
@@ -39,23 +56,31 @@ const Navbar = () => {
               key={item.href}
               href={item.href}
               className={`transition-colors hover:text-primary ${
-                isActive(item.href)
-                  ? "text-primary underline underline-offset-4"
-                  : ""
+                isActive(item.href) ? "text-primary underline underline-offset-4" : ""
               }`}
             >
               {item.label}
             </Link>
           ))}
+            
         </nav>
 
-        {/* Right: Theme toggle + Login + Mobile menu button */}
+        {/* Right Side: Theme + Auth */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          {/* Desktop Login button */}
-          <Link href="/login" className="hidden md:block">
-            <Button className="cursor-pointer hover:bg-white hover:text-black" size="lg">Login</Button>
-          </Link>
+
+          {mounted && user ? (
+            <div className="hidden md:flex">
+              <UserDropdown />
+            </div>
+          ) : (
+            mounted && (
+              <Button asChild className="hidden md:block">
+                <Link href="/login">Login</Link>
+              </Button>
+            )
+          )}
+
           {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
@@ -70,26 +95,78 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 px-4 py-3">
-          <nav className="flex flex-col gap-4 text-sm font-medium">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`transition-colors hover:text-primary ${
-                  isActive(item.href)
-                    ? "text-primary underline underline-offset-4"
-                    : ""
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/login" onClick={() => setIsOpen(false)}>
-              <Button size="sm" className="cursor-pointer hover:bg-white hover:text-black w-full">Login</Button>
-            </Link>
-          </nav>
+        <div className="md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
+          {/* Navigation Links */}
+          <div className="px-4 py-3">
+            <nav className="flex flex-col gap-4 text-sm font-medium">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`transition-colors hover:text-primary ${
+                    isActive(item.href) ? "text-primary underline underline-offset-4" : ""
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              
+            </nav>
+         
+          </div>
+
+          {/* User Actions (only visible when logged in) */}
+          {mounted && user && (
+            <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  asChild
+                >
+                  <Link href="/profile" onClick={() => setIsOpen(false)}>
+                    <User className="w-4 h-4" />
+                    View Profile
+                  </Link>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  asChild
+                >
+                  <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Link>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                  onClick={() => {
+                    dispatch(userLogout());
+                    setIsOpen(false);
+                  }}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Login Button (only visible when not logged in) */}
+          {mounted && !user && (
+            <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+              <Button asChild className="w-full" variant="destructive">
+                <Link href="/login" onClick={() => setIsOpen(false)}>
+                  Login
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </header>
