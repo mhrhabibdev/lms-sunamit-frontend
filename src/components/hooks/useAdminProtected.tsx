@@ -1,26 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/hooks/useProtected.tsx
+// src/components/hooks/useAdminProtected.tsx
 "use client";
 
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-
-import LoadingPage from "@/app/loading";
 import { useSelector } from "react-redux";
+import LoadingPage from "@/app/loading";
 
-export default function Protected({ children }: { children: ReactNode }) {
-const {user,isLoading}=useSelector((state: any) => state.user);
+interface RootState {
+  auth: {  // Changed from 'user' to 'auth' if that's your slice name
+    user: any;
+    isLoading: boolean;
+  };
+}
 
-const isAdmin = user?.role === "admin";
-  // যদি এখনো loading হয়, তাহলে কিছুই করবো না - শুধু লোডিং দেখাবো
-  if (isLoading) {
-    return <LoadingPage />;
-  }
+export default function AdminProtected({ children }: { children: ReactNode }) {
+  const { user, isLoading } = useSelector((state: RootState) => state.auth); // Changed to state.auth
 
-  // loading শেষ হলে, এরপর authentication check করবো
+  const isAdmin = user?.role === "admin";
+
+  if (isLoading) return <LoadingPage />;
   if (!isAdmin) {
     redirect("/");
-    return null; 
+    return null;
   }
 
   return <>{children}</>;
