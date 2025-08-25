@@ -14,9 +14,9 @@ import { Input } from "@/components/ui/input";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store";
-import { useActivationMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useActivationMutation } from "@/redux/features/auth/authApi";
 
 export function OtpVerificationCard() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
