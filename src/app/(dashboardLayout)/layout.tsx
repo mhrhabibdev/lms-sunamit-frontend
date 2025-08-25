@@ -1,15 +1,21 @@
 import { AdminSidebar } from "@/components/Admin/Sidebar/AdminSidebar"
+import DashboardHeader from "@/components/Admin/Sidebar/DashboardHeader"
+import AdminProtected from "@/components/hooks/useAdminProtected"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
+   <AdminProtected >
+     <SidebarProvider>
       <AdminSidebar />
-      <main>
+      <main className="w-full ">
         <SidebarTrigger />
+        <DashboardHeader />
         {children}
+      
       </main>
     </SidebarProvider>
+   </AdminProtected>
   )
 }
