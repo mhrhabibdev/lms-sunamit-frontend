@@ -15,8 +15,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-import { CourseInfoType } from "@/type";
+// import { CourseInfoType } from "@/type";
 import { useState, DragEvent, ChangeEvent, useRef } from "react";
+
+type CourseInfoType = {
+  name: string;
+  description: string;
+  price: string;
+  estimatedPrice: string;
+  tags: string;
+  level: string;
+  demoUrl: string;
+  thumbnail: string;
+};
 
 type Props = {
   courseInfo: CourseInfoType;

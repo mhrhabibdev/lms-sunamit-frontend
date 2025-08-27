@@ -3,6 +3,7 @@ import { useState } from "react";
 import CourseInformation from "./CourseInformation";
 import CourseOption from "./CourseOption";
 import CourseData from "./CourseData";
+import CourseContent from "./CourseContent";
 
 export default function CreateCourse() {
   const [active, setActive] = useState(0);
@@ -18,7 +19,7 @@ export default function CreateCourse() {
   });
   const [benifits, setBenifits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
-  const [coureContentData, setCourseContentData] = useState([
+  const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",
       title: "",
@@ -53,6 +54,14 @@ export default function CreateCourse() {
             setBerifits={setBenifits}
             prerequisites={prerequisites}
             setPrerequisites={setPrerequisites}
+            active={active}
+            setActive={setActive}
+          />
+        )}
+        {active === 2 && (
+          <CourseContent
+            courseContentData={courseContentData}
+            setCourseContentData={setCourseContentData}
             active={active}
             setActive={setActive}
           />
