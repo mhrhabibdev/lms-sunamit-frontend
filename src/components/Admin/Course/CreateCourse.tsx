@@ -34,7 +34,45 @@ export default function CreateCourse() {
       suggestion: "",
     },
   ]);
-  const [coureData, setCourseData] = useState([{}]);
+  const [coureData, setCourseData] = useState({});
+
+  const handleSubmit = () => {
+  //  formed benifits data
+    const formattedBenefits = benifits.map((benifit) =>( {titel:benifit.title}));
+    const formattedPrerequisites = prerequisites.map((prerequisite) => ({ title: prerequisite.title }));
+    const formattedCourseContent = courseContentData.map((content) => ({
+      videoUrl: content.videoUrl,
+      title: content.title,
+      description: content.description,
+      videoSection: content.videoSection,
+      links: content.links.map((link) => ({
+        title: link.title,
+        url: link.url,
+      })),
+      suggestion: content.suggestion,
+    }));
+    // proper our data object
+    const data = {
+      name: courseInfo.name,
+      description: courseInfo.description,
+      price: courseInfo.price,
+      estimatedPrice: courseInfo.estimatedPrice,
+      tags: courseInfo.tags.split(",").map((tag) => tag.trim()),
+      level: courseInfo.lavel,
+      demoUrl: courseInfo.demoUrl,
+      thumbnail: courseInfo.thumbnail,
+      totalVideos: courseContentData.length,
+      benefits: formattedBenefits,
+      prerequisites: formattedPrerequisites,
+      courseContent: formattedCourseContent,
+    }
+    setCourseData(data);
+
+    };
+
+    console.log(coureData);
+
+  
 
   return (
     <div className="w-full min-h-screen flex p-4">
@@ -64,6 +102,7 @@ export default function CreateCourse() {
             setCourseContentData={setCourseContentData}
             active={active}
             setActive={setActive}
+            handleSubmit= {handleSubmit}
           />
         )}
       </div>
