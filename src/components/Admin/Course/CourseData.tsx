@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, ArrowLeft, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 type Props = {
   berifits: { title: string }[];
@@ -21,6 +22,38 @@ export default function CourseData({
   active,
   setActive,
 }: Props) {
+  const handleNext = () => {
+    // Validate benefits
+    const hasEmptyBenefits = berifits.some((item) => !item.title.trim());
+    if (hasEmptyBenefits) {
+      toast.error("Please fill in all benefit fields");
+      return;
+    }
+
+    // Validate prerequisites
+    const hasEmptyPrerequisites = prerequisites.some(
+      (item) => !item.title.trim()
+    );
+    if (hasEmptyPrerequisites) {
+      toast.error("Please fill in all prerequisite fields");
+      return;
+    }
+
+    // Check if we have at least one benefit and one prerequisite
+    if (berifits.length === 0) {
+      toast.error("Please add at least one benefit");
+      return;
+    }
+
+    if (prerequisites.length === 0) {
+      toast.error("Please add at least one prerequisite");
+      return;
+    }
+
+    // Proceed to next step
+    setActive(active + 1);
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6">
       <h1 className="text-2xl font-semibold mb-8 text-center">Course Data</h1>
@@ -120,7 +153,16 @@ export default function CourseData({
         >
           <ArrowLeft className="w-4 h-4 mr-2" /> Previous
         </Button>
-        <Button type="button" onClick={() => setActive(active + 1)}>
+        <Button
+          type="button"
+          onClick={handleNext}
+          disabled={
+            berifits.length === 0 ||
+            prerequisites.length === 0 ||
+            berifits.some((item) => !item.title.trim()) ||
+            prerequisites.some((item) => !item.title.trim())
+          }
+        >
           Next <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
